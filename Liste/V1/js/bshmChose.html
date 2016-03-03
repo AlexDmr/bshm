@@ -1,4 +1,13 @@
-<md-checkbox ng-model="$ctrl.data.fait" aria-label="Checkbox 1">
-	<label ng-bind="$ctrl.data.texte"></label>
-	
-</md-checkbox>
+<md-content layout="row">
+	<md-checkbox ng-model="$ctrl.nf.fait" aria-label="Tâche réalisée ou pas"></md-checkbox>
+	<form novalidate layout="column" ng-submit="$ctrl.basculerEdition()" flex ng-click="$event.stopPropagation()">
+		<label ng-if="ctrl.nf.fait || !$ctrl.editable" ng-click="$ctrl.basculerEdition($event)" ng-bind="$ctrl.nf.texte"></label>
+		<md-input-container ng-if="!ctrl.nf.fait && $ctrl.editable">
+			<input ng-model="$ctrl.nf.texte" autofocus>
+		</md-input-container>
+	</form>
+	<md-button ng-click="$ctrl.dispose($event)">
+		X
+		<!-- <md-icon md-svg-src="js/flat.svg"></md-icon> -->
+	</md-button>
+</md-content>
