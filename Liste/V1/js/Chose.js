@@ -8,7 +8,7 @@ var template 	= require( "./bshmChose.html" );
 module.exports = function(mod) {
 	mod.component( "bshmChose", {
 		template	: template,
-		bindings	: {nf: '='},
+		bindings	: {nf: '<'},
 		controller	: function() {
 			this.editable	= false;
 			this.basculerEdition	= function() {

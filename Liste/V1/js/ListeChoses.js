@@ -12,7 +12,7 @@ module.exports = function(mod) {
 	Chose(mod);
 	mod.component( "bshmListe", {
 		template	: template,
-		bindings	: {nf: '='},
+		bindings	: {nf: '<'},
 		controller	: function() {
 			this.texteChose = "";
 			this.choses 	= this.nf.choses;
