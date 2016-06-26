@@ -12,7 +12,7 @@ var gulp				= require('gulp')
   , upath				= require("upath")
   ;
 
-var webpackEntries	=	[ 'js/secretary.js'
+var webpackEntries	=	[ './mainV0.js'
 						]
 var filesToLint 	=	[ 'js/**/*.js'
 						, 'serverCabinetMedical.js'
