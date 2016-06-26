@@ -1,11 +1,11 @@
 // Framework Angular
 var angular 			= require( "angular" 					)
-  , angular-material	= require( "angular-material" 			)
-  , angular-aria 		= require( "angular-aria" 				)
-  , angular-animate		= require( "angular-animate" 			)
+  , angularMaterial	= require( "angular-material" 			)
+  , angularAria 		= require( "angular-aria" 				)
+  , angularAnimate		= require( "angular-animate" 			)
   ;
 
 
-var mod = angualar.module( "bshm", ["angular-material"] );
+var mod = angular.module( "bshm", ["angular-material"] );
 
-require( "./js/ListeChoses.js" )(mod);
+// require( "./js/ListeChoses.js" )(mod);
