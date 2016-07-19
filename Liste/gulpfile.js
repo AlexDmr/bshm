@@ -1,5 +1,5 @@
 var gulp				= require('gulp')
-  , webpack				= require("gulp-webpack")
+  , webpack				= require("webpack-stream")
   , named				= require('vinyl-named')
   , eslint				= require('gulp-eslint')
   , ExtractTextPlugin	= require("extract-text-webpack-plugin")
@@ -10,12 +10,15 @@ var gulp				= require('gulp')
   , gzip				= require('gulp-gzip')
   , through				= require('through-gulp')
   , upath				= require("upath")
+  , ts 					= require("ts-loader")
   ;
 
-var webpackEntries	=	[ './mainV1.js'
+var webpackEntries	=	[ "./V0/mainV0.js"
+						, "./V1/mainV1.js"
 						]
-var filesToLint 	=	[ 'js/**/*.js'
-						, 'serverCabinetMedical.js'
+var filesToLint 	=	[ "NF/**/*.js"
+						, "V0/**/*.js"
+						, "V1/**/*.js"
 						];
 
 var problemFiles	=	filesToLint.slice();
@@ -36,6 +39,7 @@ function listLinted() {
 		this.push(file);
 		if(file.eslint) {
 			var fName = upath.normalizeSafe( file.cwd + '/' + file.eslint.filePath );
+			// console.log( "\t", fName );
 			var pos = problemFiles.indexOf(fName);
 			if( file.eslint.errorCount || file.eslint.warningCount) {
 				appendProblemFiles(fName);
@@ -52,7 +56,7 @@ function linterPipeline() {
     return gulp	.src ( problemFiles		)
 				.pipe( eslint() 		)
 				.pipe( listLinted() 	)
-				.pipe( eslint.format() 	)
+				.pipe( eslint.format("stylish", process.stdout) 	)
 				;
 }
 
@@ -61,11 +65,15 @@ gulp.task('lint', function () {return linterPipeline();});
 gulp.task('watch', ['lint'], function () {
 	// console.log("Task lint")
 	problemFiles.splice(0, filesToLint.length);
+	// console.log( "problemFiles:", problemFiles);
 	gulp.watch( filesToLint, function(event) {
 		var fName = upath.normalizeSafe( event.path );
 		// console.log( event );
 		if (event.type !== 'deleted') {
 	  			appendProblemFiles(fName);
+				console.log( "__________________________________________________________________________" );
+				console.log( "------------------------------- CODE LINT --------------------------------" );
+				console.log( "--------------------------------------------------------------------------" );
 				return linterPipeline();
 			}
   });
@@ -86,9 +94,10 @@ gulp.task("webpack", function(callback) {
 			watch		: true,
 			module		: {
 				loaders: [
-					{ test	: /\.css$/	, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
-					{ test	: /\.html$/	, loader: 'raw-loader'},
-                    { test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' }
+					{ test	: /\.css$/					, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
+					{ test	: /\.html$/					, loader: 'raw-loader'},
+                    { test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' },
+                    { test: /\.ts$/ 					, loader: 'ts-loader'}
 				]
 			},
 			plugins: [ new ExtractTextPlugin("[name].css")

@@ -1,14 +1,9 @@
 // Framework Angular
 var angular 		= require( "angular" 			)
-  , angularMaterial	= require( "angular-material" 	)
-  , angularAria 	= require( "angular-aria" 		)
-  , angularAnimate	= require( "angular-animate" 	)
   ;
-require( "angular-material/angular-material.css" );
-
 
 // Instantiate module
-var mod = angular.module( "bshm", ["ngMaterial"] );
+var mod = angular.module( "bshm", [] );
 
 // Define a directive to deal with data
 var ListeChoses = require( "../NF/ListeChoses.js" );
