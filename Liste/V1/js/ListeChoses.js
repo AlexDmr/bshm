@@ -1,25 +1,32 @@
-// Noyau fonctionnel
-require( "../../NF/ListeChoses.js"	);
-require( "./liste.css" );
+var angular = require( "angular" );
+
+// Définition du composant
+var moduleName 			= "listeChoses";
+var moduleListeChose	= angular.module( moduleName, [ require( "./Chose.js" ) ]);
+
 
 // Template HTML
-var template 	= require( "./bshmListe.html" );
-
-var Chose = require( "./Chose.js" );
+var template 	= require( "./ListeChoses.html" );
+require( "./ListeChoses.css" );
  
+function controller($scope) {
+	this.texteChose = "";
+	this.choses 	= this.nf.choses;
+	this.Ajouter	= function(texte) {
+		this.nf.Ajouter(texte);
+		this.texteChose = "";
+	}
+	this.nf.on("update", function() {
+		$scope.$applyAsync();
+	})
+}
+controller.$inject = ["$scope"];
+
  // Définition du composant
-module.exports = function(mod) {
-	Chose(mod);
-	mod.component( "bshmListe", {
+moduleListeChose.component( moduleName, {
 		template	: template,
 		bindings	: {nf: '<'},
-		controller	: function() {
-			this.texteChose = "";
-			this.choses 	= this.nf.choses;
-			this.Ajouter	= function(texte) {
-				this.nf.Ajouter(texte);
-				this.texteChose = "";
-			}
-		}
+		controller	: controller
 	});
-}
+
+module.exports = moduleName;

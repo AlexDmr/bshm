@@ -18,8 +18,8 @@ function listeChoses_IHM(NF, rootSelector) {
 
 	// Abonnement pour créer de nouvelles choses à faire
 	this.ihm.formulaire.onsubmit = function() {
-		console.log( "Ajouter ", listeIHM.ihm.nouvelleChose.value );
 		NF.Ajouter( listeIHM.ihm.nouvelleChose.value );
+		listeIHM.ihm.nouvelleChose.value = "";
 	};
 
 	// Abonnement au noyau fonctionnel

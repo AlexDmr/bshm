@@ -4,15 +4,16 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>La liste des choses à faire (Angular 1.5.x)</title>
-		<link rel="stylesheet" type="text/css" href="dev/mainV1.css"/>
-		<script src="dev/mainV1.js"></script>
+		<link rel="stylesheet" type="text/css" href="../dev/mainV1.css"/>
+		<script src="../dev/mainV1.js"></script>
 	</head>
-	<body ng-app="bshm" bshm-root>
+	<body ng-app="cours" liste-cours>
 		<section>
 			<h1>Projet de gestion des choses à faire : version Angular 1.5.x</h1>
-			<bshm-liste nf="ctrl.listeChoses"></bshm-liste>
+			<liste-choses nf="$ctrl.listeChoses"></liste-choses>
 			<hr/>
-			<bshm-liste nf="ctrl.listeChoses"></bshm-liste>
+			<h1>Projet de gestion des choses à faire : version sans framework</h1>
+			<section id="listeChoses1"></section>
 		</section>
 	</body>
 </html>

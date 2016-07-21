@@ -10,8 +10,9 @@ function Chose_IHM(NF, root) {
 	this.root = root;
 	root.innerHTML = template_chose;
 	this.ihm = {
-		texte	: root.querySelector( "input.texte" ),
-		fait	: root.querySelector( "input.fait"  )
+		texte		: root.querySelector( "input.texte" ),
+		fait		: root.querySelector( "input.fait"  ),
+		supprimer	: root.querySelector( "input.remove"  )
 	};
 
 	// Abonnement au noyau fonctionnel
@@ -21,6 +22,9 @@ function Chose_IHM(NF, root) {
 	// Abonnement aux évènements utilisateurs
 	this.ihm.fait.onchange  = function() {NF.setFait ( choseIHM.ihm.fait.checked );}
 	this.ihm.texte.onchange = this.ihm.texte.onkeyup = function() {NF.setTexte( choseIHM.ihm.texte.value  );}
+	this.ihm.supprimer.onclick = function() {
+		NF.dispose();
+	}
 }
 
 Chose_IHM.prototype = {

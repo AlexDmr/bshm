@@ -3,7 +3,7 @@ var gulp				= require('gulp')
   , named				= require('vinyl-named')
   , eslint				= require('gulp-eslint')
   , ExtractTextPlugin	= require("extract-text-webpack-plugin")
-  , uglify				= require('gulp-uglify')
+  // , uglify				= require('gulp-uglify')
   , filter				= require('gulp-filter')
   , autoprefixer		= require('gulp-autoprefixer')
   , cleanCSS 			= require('gulp-clean-css')
@@ -11,14 +11,20 @@ var gulp				= require('gulp')
   , through				= require('through-gulp')
   , upath				= require("upath")
   , ts 					= require("ts-loader")
+  , tslint				= require("gulp-tslint")
+  , babel 				= require('gulp-babel');
   ;
 
 var webpackEntries	=	[ "./V0/mainV0.js"
 						, "./V1/mainV1.js"
-						]
+						, "./V2/mainV2.ts"
+						];
 var filesToLint 	=	[ "NF/**/*.js"
+						, "NF/**/*.ts"
 						, "V0/**/*.js"
 						, "V1/**/*.js"
+						, "V2/**/*.js"
+						, "V2/**/*.ts"
 						];
 
 var problemFiles	=	filesToLint.slice();
@@ -37,11 +43,12 @@ function removeProblemFiles(fName) {
 function listLinted() {
 	return stream = through(function(file, encoding,callback) {
 		this.push(file);
-		if(file.eslint) {
+		if(file.eslint || file.tslint) {
 			var fName = upath.normalizeSafe( file.cwd + '/' + file.eslint.filePath );
 			// console.log( "\t", fName );
 			var pos = problemFiles.indexOf(fName);
-			if( file.eslint.errorCount || file.eslint.warningCount) {
+			if (  file.eslint.errorCount || file.eslint.warningCount 
+				||file.tslint.errorCount || file.tslint.warningCount  ) {
 				appendProblemFiles(fName);
 			} else {
 				removeProblemFiles(fName);
@@ -53,14 +60,23 @@ function listLinted() {
 
 function linterPipeline() {
 	// console.log( "linterPipeline", problemFiles );
-    return gulp	.src ( problemFiles		)
-				.pipe( eslint() 		)
-				.pipe( listLinted() 	)
-				.pipe( eslint.format("stylish", process.stdout) 	)
-				;
+   var src = gulp.src ( problemFiles )
+     ,  ts =  src.pipe( filter('*.ts' ))
+     ,  js =  src.pipe( filter('*.js' ))
+    js	.pipe( eslint() 		)
+		.pipe( listLinted() 	)
+		.pipe( eslint.format("stylish", process.stdout) 	)
+		;
+    js	.pipe(tslint( {formatter: "verbose"} ))
+		.pipe( eslint.format("stylish", process.stdout) 	)
+		.pipe( listLinted() 	)
+        .pipe(tslint.report())
+		;
+	return src;
 }
 
-gulp.task('lint', function () {return linterPipeline();});
+gulp.task('lint'  , function () {return linterPipeline  ();});
+
 
 gulp.task('watch', ['lint'], function () {
 	// console.log("Task lint")
@@ -118,7 +134,7 @@ gulp.task("webpack", function(callback) {
 
 	// JS process
 	js	.pipe( gulp.dest('dev') )
-		.pipe( uglify() )
+		.pipe( babel({minified: true}) )
 		.pipe( gulp.dest('dist') )
 		.pipe( gzip() )
 		.pipe( gulp.dest('dist') );
@@ -127,7 +143,6 @@ gulp.task("webpack", function(callback) {
 });
 
 ;
-
 
 gulp.task('default', ['webpack', 'watch'], function() {
 	console.log("Done ???");
