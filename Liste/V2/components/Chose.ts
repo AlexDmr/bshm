@@ -1,7 +1,7 @@
 import { Component, Input 	} from "@angular/core";
-import {htmlTemplate		} from "./Chose.html.ts";
+import {htmlTemplate		} from "./Chose.html";
 
-import * as nf from "../../NF/nf.ts";
+import * as nf from "../nf/nf";
 
 @Component({
   selector		: "chose",
@@ -10,7 +10,6 @@ import * as nf from "../../NF/nf.ts";
 export class Chose { 
 	@Input() data	: nf.Chose;
 	dispose	() {
-		console.log( "dispose", this );
 		this.data.dispose();
 	}
 };

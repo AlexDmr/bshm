@@ -1,23 +1,9 @@
-import "./liste.css";
+/*import "./liste.css";*/
 
-
-import "reflect-metadata";
-import "rxjs";
-import "zone.js/dist/zone";
-
-// Angular 2
-import "@angular/platform-browser";
-import "@angular/platform-browser-dynamic";
-import "@angular/core";
-import "@angular/common";
-import "@angular/http";
-import "@angular/router";
 import { bootstrap }	from "@angular/platform-browser-dynamic";
-
-
 import { Component 	} 	from "@angular/core";
-import * as nf 			from "../NF/nf.ts";
-import {ListeChoses}	from "./ts/ListeChoses.ts";
+import * as nf 			from "./nf/nf";
+import {ListeChoses}	from "./components/ListeChoses";
 
 @Component({
   selector		: "archi-logicielle",

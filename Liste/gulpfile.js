@@ -11,13 +11,16 @@ var gulp				= require('gulp')
   , through				= require('through-gulp')
   , upath				= require("upath")
   , ts 					= require("ts-loader")
+  , tsc					= require('gulp-typescript')
   , tslint				= require("gulp-tslint")
   , babel 				= require('gulp-babel');
   ;
 
 var webpackEntries	=	[ "./V0/mainV0.js"
 						, "./V1/mainV1.js"
-						, "./V2/mainV2.ts"
+						, "./V2/mainV2_webpack.ts"
+						];
+var typescriptInputs=	[ {config: "./V2/tsconfig.json", dest: "./V2/compil"}
 						];
 var filesToLint 	=	[ "NF/**/*.js"
 						, "NF/**/*.ts"
@@ -108,6 +111,9 @@ gulp.task("webpack", function(callback) {
 				reasons	: false
 			},
 			watch		: true,
+			resolve		: {
+				extensions	: ["", ".webpack.js", ".web.js", ".js", ".ts"]
+			},
 			module		: {
 				loaders: [
 					{ test	: /\.css$/					, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
@@ -115,6 +121,9 @@ gulp.task("webpack", function(callback) {
                     { test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' },
                     { test: /\.ts$/ 					, loader: 'ts-loader'}
 				]
+			},
+			ts : {
+				configFileName	: "tsconfig.webpack.json"
 			},
 			plugins: [ new ExtractTextPlugin("[name].css")
 					 ],
@@ -144,7 +153,16 @@ gulp.task("webpack", function(callback) {
 
 ;
 
-gulp.task('default', ['webpack', 'watch'], function() {
+gulp.task( 'tsc', function() {
+	typescriptInputs.forEach( function(def) {
+		var compileFct;
+		var tsProject = tsc.createProject( def.config );
+		var tsresult = tsProject.src().pipe(tsc(tsProject));
+		tsresult.js.pipe( gulp.dest(def.dest) );
+	});
+});
+
+gulp.task('default', ['webpack', 'watch', 'tsc'], function() {
 	console.log("Done ???");
 });
 

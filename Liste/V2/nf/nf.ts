@@ -33,7 +33,7 @@ export class ListeChoses {
 
 @Injectable()
 export class ListeChoseService {
-	getData	() {
+	getData	() : Promise<ListeChoses> {
 		return new Promise<ListeChoses>( 
 			(resolve) => { setTimeout(() => resolve( new ListeChoses() ), 2000) }
 			);

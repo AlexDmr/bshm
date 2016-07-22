@@ -1,9 +1,9 @@
 import { Component, Input 	} 	from "@angular/core";
-import {htmlTemplate		}	from "./ListeChoses.html.ts";
+import {htmlTemplate		}	from "./ListeChoses.html";
 
-import { Chose }				from "./Chose.ts";
+import { Chose }				from "./Chose";
 
-import * as nf 					from "../../NF/nf.ts";
+import * as nf 					from "../nf/nf";
 
 @Component({
   selector		: "liste-chose",

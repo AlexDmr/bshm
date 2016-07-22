@@ -1,6 +1,5 @@
 export const htmlTemplate = `
 	<section class="chose">
-		data : {{data}} ///
 		<input 		type 			= "checkbox" 
 					[(ngModel)]		= "data.fait" 
 					aria-label 		= "Tâche réalisée ou pas"
