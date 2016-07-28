@@ -13,6 +13,7 @@ var gulp				= require('gulp')
   , ts 					= require("ts-loader")
   , tsc					= require('gulp-typescript')
   , tslint				= require("gulp-tslint")
+  ,	gulp_jspm 			= require('gulp-jspm')
   , babel 				= require('gulp-babel');
   ;
 
@@ -155,7 +156,6 @@ gulp.task("webpack", function(callback) {
 
 gulp.task( 'tsc', function() {
 	typescriptInputs.forEach( function(def) {
-		var compileFct;
 		var tsProject = tsc.createProject( def.config );
 		var tsresult = tsProject.src().pipe(tsc(tsProject));
 		tsresult.js.pipe( gulp.dest(def.dest) );
