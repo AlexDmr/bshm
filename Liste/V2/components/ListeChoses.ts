@@ -1,5 +1,4 @@
 import { Component, Input 	} 	from "@angular/core";
-//import {htmlTemplate		}	from "../IHM/ListeChoses.html";
 const htmlTemplate = `
 	<form (ngSubmit)="Ajouter( texteChose )" action="#">
 		<label>Entrer une nouvelle chose à faire</label>

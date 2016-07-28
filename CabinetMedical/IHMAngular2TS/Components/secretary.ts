@@ -1,8 +1,8 @@
-import {CabinetMedicalService} from '../Services/cabinetMedicalService';
-import {Component} from '@angular/core';
+import {CabinetMedicalService} from "../Services/cabinetMedicalService";
+import {Component} from "@angular/core";
 
 @Component({
-    selector	: 'secretary-app',
+    selector	: "secretary-app",
     styles      : [
         `h1 {background: red;}`,
         `p {text-align: right;}`
@@ -16,7 +16,7 @@ export class SecretaryApp {
     initDone		: boolean;
     constructor		(cms: CabinetMedicalService) {
         this.initDone = false;
-        console.log('Appelez le service pour formatter et obtenir les données du cabinet');
+        console.log("Appelez le service pour formatter et obtenir les données du cabinet");
+        cms.getDataFrom( "/data/cabinetInfirmier.xml" );
     }
 };
-

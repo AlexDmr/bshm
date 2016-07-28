@@ -18,11 +18,13 @@ var filesToLint 	=	[ "IHMAngular2TS/**/*.ts"
 
 var problemFiles	=	filesToLint.slice();
 function appendProblemFiles(fName) {
+	console.log( "appendProblemFiles", fName );
 	if(problemFiles.indexOf(fName) === -1) {
 		problemFiles.push(fName);
 	}
 }
 function removeProblemFiles(fName) {
+	console.log("removeProblemFiles", fName);
 	var pos = problemFiles.indexOf(fName)
 	if(pos !== -1) {
 		problemFiles.splice(problemFiles.indexOf(fName), 1);
@@ -32,15 +34,16 @@ function removeProblemFiles(fName) {
 function listLinted() {
 	return through2.obj( function(file, encoding, callback) {// stream = through(function(file, encoding, callback) {
 		this.push(file);
+		var parsedFile = upath.parse( upath.normalizeSafe( file.path ) );
+		var fName = parsedFile.dir + "/" + parsedFile.name + parsedFile.ext;
 		if(file.tslint) {
-			var parsedFile = upath.parse( file.path );
-			var fName = upath.normalizeSafe( file.cwd + '/' + parsedFile.name );
 			if (  file.tslint.failureCount  ) {
 				appendProblemFiles(fName);
-				console.log( "appendProblemFiles", fName );
 			} else {
 				removeProblemFiles(fName);
 			}
+		} else {
+			removeProblemFiles(fName);
 		}
 		callback();
 		}, function(callback) {callback();});
