@@ -13,7 +13,6 @@
     "member-ordering": [
       true,
       "public-before-private",
-      "static-before-instance",
       "variables-before-functions"
     ],
     "no-arg": true,
@@ -53,7 +52,7 @@
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "no-attribute-parameter-decorator": true,
-    "no-input-rename": true,
-    "no-output-rename": true
+    "no-input-rename": false,
+    "no-output-rename": false
   }
 }
