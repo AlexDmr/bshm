@@ -45,22 +45,24 @@ export class ComposantSecretaire {
     constructor		(public cms: NF.ServiceCabinetMedical) {
         this.nf         = cms.cabinetJS;
     }
-    affecterPatient(patient: NF.PatientInterface, infirmierOrigine: NF.InfirmierInterface, infirmierDestination) {
-        //this.cms.affecter(patient, infirmier).subscribe( (response) => {
-            console.log( "affecter patient", patient, infirmierOrigine, infirmierDestination);
-            if(infirmierOrigine) {
-                infirmierOrigine.patients.splice( infirmierOrigine.patients.indexOf(patient), 1);
-            } else {
-                // Il était dans le liste des patients non affectés
-                this.nf.patientsNonAffectes.splice( this.nf.patientsNonAffectes.indexOf(patient), 1);
+    affecterPatient(patient: NF.PatientInterface, infirmierOrigine: NF.InfirmierInterface, infirmierDestination: NF.InfirmierInterface) {
+        this.cms.affecter(patient, infirmierOrigine, infirmierDestination).then( (response) => {
+            if(response.status === 200) {
+                console.log( "affecter patient", patient, infirmierOrigine, infirmierDestination);
+                if(infirmierOrigine) {
+                    infirmierOrigine.patients.splice( infirmierOrigine.patients.indexOf(patient), 1);
+                } else {
+                    // Il était dans le liste des patients non affectés
+                    this.nf.patientsNonAffectes.splice( this.nf.patientsNonAffectes.indexOf(patient), 1);
+                }
+                if(infirmierDestination) {
+                    infirmierDestination.patients.push( patient );
+                } else {
+                    // Il va dans la liste des patients non affectés
+                    this.nf.patientsNonAffectes.push(patient);
+                }
             }
-            if(infirmierDestination) {
-                infirmierDestination.patients.push( patient );
-            } else {
-                // Il va dans la liste des patients non affectés
-                this.nf.patientsNonAffectes.push(patient);
-            }
-        //});
+        });
     }
     ngOnInit() {
         console.log("Appelez le service pour formatter et obtenir les données du cabinet\n", this);

@@ -14,7 +14,8 @@ var gulp				= require('gulp')
   , tsc					= require('gulp-typescript')
   , tslint				= require("gulp-tslint")
   ,	gulp_jspm 			= require('gulp-jspm')
-  , babel 				= require('gulp-babel');
+  , babel 				= require('gulp-babel')
+  , sourcemaps 			= require('gulp-sourcemaps')
   ;
 
 var webpackEntries	=	[ "./V0/mainV0.js"
@@ -157,10 +158,18 @@ gulp.task("webpack", function(callback) {
 gulp.task( 'tsc', function() {
 	typescriptInputs.forEach( function(def) {
 		var tsProject = tsc.createProject( def.config );
-		var tsresult = tsProject.src().pipe(tsc(tsProject));
-		tsresult.js.pipe( gulp.dest(def.dest) );
+		var tsresult = tsProject.src().pipe( sourcemaps.init() ).pipe(tsc(tsProject));
+		tsresult.js.pipe(sourcemaps.write({
+			// Return relative source map root directories per file.
+			sourceRoot: function (file) {
+				var sourceFile = upath.join(file.cwd, file.sourceMap.file );
+				console.log( "source map", sourceFile );
+				return upath.relative(upath.dirname(sourceFile), file.cwd);
+			}
+		})).pipe( gulp.dest( def.dest ) );
 	});
 });
+
 
 gulp.task('default', ['webpack', 'watch', 'tsc'], function() {
 	console.log("Done ???");

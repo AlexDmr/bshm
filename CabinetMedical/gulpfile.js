@@ -8,6 +8,7 @@ var gulp				= require('gulp')
   , tslint				= require("gulp-tslint")
   , filter				= require("gulp-filter")
   , stylish 			= require('gulp-tslint-stylish')
+  , sourcemaps 			= require('gulp-sourcemaps');
   ;
 
 
@@ -86,8 +87,15 @@ gulp.task('watch', ['lint'], function () {
 gulp.task( 'tsc', function() {
 	typescriptInputs.forEach( function(def) {
 		var tsProject = tsc.createProject( def.config );
-		var tsresult = tsProject.src().pipe(tsc(tsProject));
-		tsresult.js.pipe( gulp.dest( def.dest ) );
+		var tsresult = tsProject.src().pipe(sourcemaps.init()).pipe(tsc(tsProject));
+		tsresult.js.pipe(sourcemaps.write({
+			// Return relative source map root directories per file.
+			sourceRoot: function (file) {
+				var sourceFile = upath.join(file.cwd, file.sourceMap.file );
+				console.log( "source map", sourceFile );
+				return upath.relative(upath.dirname(sourceFile), file.cwd);
+			}
+		})).pipe( gulp.dest( def.dest ) );
 	});
 });
 

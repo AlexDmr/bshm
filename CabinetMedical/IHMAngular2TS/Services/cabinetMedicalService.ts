@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import "rxjs/add/operator/toPromise";
-import {Observable} from "rxjs/Rx";
+//import {Observable} from "rxjs/Rx";
 
 export enum sexeEnum {M, F}
 export interface PatientInterface {
@@ -40,12 +40,14 @@ export class ServiceCabinetMedical {
             patientsNonAffectes: []
         };
     }
-    affecter(patient: PatientInterface, infirmier: InfirmierInterface) : Observable<Response> {
-        let infirmierId = infirmier?infirmier.id:"none";
+    affecter( patient: PatientInterface,
+              infirmierOrigine: InfirmierInterface,
+              infirmierDestination: InfirmierInterface) : Promise<Response> {
+        let infirmierId = infirmierDestination?infirmierDestination.id:"none";
         return this._http.post(
             "/affectation",
             {infirmier: infirmierId, patient: patient.numeroSecuriteSociale}
-        );
+        ).toPromise();
     }
     getData( url: string ) : Promise<CabinetInterface> {
         return this._http.get(url).toPromise().then( (res: Response) => {

@@ -46,28 +46,26 @@ class DragManager {
 };
 let DM = new DragManager();
 
-
+let dragDropInit = false;
 @Directive({
-    selector: "*[alx-dragdrop]" /*,
-    host    : {
-        "(document: mousemove)" : "mousemove( $event )",
-        "(document: mouseup)"   : "mouseup  ( $event )",
-        "(document: touchmove)" : "touchmove( $event )",
-        "(document: touchend)"  : "touchend ( $event )"
-    }*/
+    selector: "*[alx-dragdrop]"
 })
 export class AlxDragDrop {
     constructor() {
-        console.log( "AlxDragDrop enabled !");
+        if(dragDropInit) {
+            console.error( "Do not create multiple instance of directive alx-dragdrop !" );
+        } else {
+            console.log( "AlxDragDrop enabled !");
+            dragDropInit = true;
+        }
     }
-    @HostListener( "document: mousemove", ["$event", "true"] ) mousemove( e ) {
-        console.log("document:mousemove", e.eventPhase);
+    @HostListener( "document: mousemove", ["$event"] ) mousemove( e ) {
         DM.pointerMove   ("mouse", e.clientX, e.clientY);
     }
-    @HostListener( "document: mouseup"  , ["$event", "true"] ) mouseup  ( e ) {
+    @HostListener( "document: mouseup"  , ["$event"] ) mouseup  ( e ) {
         DM.pointerRelease("mouse");
     }
-    @HostListener( "document: touchmove", ["$event", "true"] ) touchmove( e ) {
+    @HostListener( "document: touchmove", ["$event"] ) touchmove( e ) {
         for (let i = 0; i < e.changedTouches.length; i++) {
             let touch:Touch = e.changedTouches.item(i);
             if (DM.pointerMove(touch.identifier.toString(), touch.clientX, touch.clientY)) {
@@ -76,7 +74,7 @@ export class AlxDragDrop {
             }
         }
     }
-    @HostListener( "document: touchend" , ["$event", "true"] ) touchend ( e ) {
+    @HostListener( "document: touchend" , ["$event"] ) touchend ( e ) {
         for(let i=0; i<e.changedTouches.length; i++) {
             let touch : Touch = e.changedTouches.item(i);
             if( DM.pointerRelease(touch.identifier.toString()) ) {
@@ -106,12 +104,15 @@ export class AlxDraggable {
     private root : HTMLElement;
     constructor(el: ElementRef) {
         this.root = el.nativeElement;
+        if(!dragDropInit) {
+           console.error("You should add one alx-dragdrop attribute to your code before using alx-draggable");
+        }
         //console.log( "new instance of AlxDraggable", this );
     }
     ngOnDestroy() {
         this.stop();
     }
-    @HostListener("mousedown", ["$event"] ) onMouseDown (event : MouseEvent) {
+    @HostListener("mousedown" , ["$event"]) onMouseDown (event : MouseEvent) {
         //console.log("mousedown on", this, event);
         event.preventDefault();
         event.stopPropagation();
@@ -212,6 +213,9 @@ export class AlxDropzone {
     private dropCandidateofPointers : Array<string> = [];
     private pointersHover           : Array<string> = [];
     constructor(el: ElementRef) {
+        if(!dragDropInit) {
+            console.error("You should add one alx-dragdrop attribute to your code before using alx-dropzone");
+        }
         this.root = el.nativeElement;
         this.acceptFct = YES;
         DM.registerDropZone(this);
